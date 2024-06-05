@@ -1,10 +1,12 @@
 package com.example.filtro_meta.infrastructure.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.filtro_meta.api.dto.request.UserReq;
@@ -31,35 +33,47 @@ public class UserService implements IUserService {
     
     @Override
     public Page<UserResp> getAll(int page, int size) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+        if (page < 0)
+            page = 0;
+
+        PageRequest pagination = PageRequest.of(page, size);
+
+        return this.repository.findAll(pagination)
+                .map(user -> this.entityToResponse(user)); 
     }
 
     @Override
     public UserResp get(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        return this.entityToResponse(this.find(id));
     }
 
     @Override
     public UserResp create(UserReq request) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        User user = this.requestToEntity(request);
+        
+        user.setSurveys(new ArrayList<>());
+
+        return this.entityToResponse(this.repository.save(user));
     }
 
     @Override
     public UserResp update(UserReq request, Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        User user = this.find(id);
+
+        User userUpdate = this.requestToEntity(request);
+
+        userUpdate.setId(id);
+        userUpdate.setSurveys(user.getSurveys());
+    
+        return this.entityToResponse(this.repository.save(userUpdate));
     }
 
     @Override
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        
     }
     
-    private UserResp entityToResp(User entity) {
+    private UserResp entityToResponse(User entity) {
         List<SurveyToUserResp> surveys = 
             entity.getSurveys()
             .stream()

@@ -3,13 +3,18 @@ package com.example.filtro_meta.api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.filtro_meta.api.dto.request.UserReq;
 import com.example.filtro_meta.api.dto.response.UserResp;
 import com.example.filtro_meta.infrastructure.abstract_services.IUserService;
 
@@ -41,5 +46,20 @@ public class UserController {
     @GetMapping(path = "/users/{id}")
     public ResponseEntity<UserResp> get(@PathVariable Long id) {
         return ResponseEntity.ok(this.service.get(id));
+    }
+
+    @Operation(summary = "Crea un usuario", description = "Crea un usuario")
+    @PostMapping(path = "/users")
+    public ResponseEntity<UserResp> create(@Validated @RequestBody UserReq request){
+        return ResponseEntity.ok(this.service.create(request));
+    }
+
+    @Operation(summary = "Actualiza un usuario", description = "Actualiza un usuario")
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<UserResp> update(
+            @PathVariable Long id,
+            @Validated @RequestBody UserReq request) {
+
+        return ResponseEntity.ok(this.service.update(request, id));
     }
 }

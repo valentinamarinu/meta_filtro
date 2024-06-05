@@ -9,7 +9,6 @@ import com.example.filtro_meta.utils.enums.State;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,13 +28,12 @@ public class SurveyReq {
     
     private String description;
 
-    @NotBlank(message = "Submission date is required.")
+    @NotNull(message = "Submission date is required.")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @FutureOrPresent(message = "It is not possible to enter a date later than the current date.")
     private LocalDateTime creation_date;
 
-    @NotBlank(message = "The status of the survey is required.")
-    @Pattern(regexp = "ACTIVE|INACTIVE", message = "The state must be ACTIVE or INACTIVE.")
+    @NotNull(message = "The status of the user is required.")
     private State active;
 
     @NotNull(message = "The creator id is required.")

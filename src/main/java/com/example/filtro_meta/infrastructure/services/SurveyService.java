@@ -1,5 +1,6 @@
 package com.example.filtro_meta.infrastructure.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class SurveyService implements ISurveyService {
         PageRequest pagination = PageRequest.of(page, size);
 
         return this.repository.findAll(pagination)
-                .map(user -> this.entityToResponse(user)); 
+                .map(survey -> this.entityToResponse(survey)); 
     }
 
     @Override
@@ -51,20 +52,22 @@ public class SurveyService implements ISurveyService {
 
     @Override
     public SurveyResp create(SurveyReq request) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        Survey survey = this.requestToEntity(request);
+        
+        survey.setQuestions(new ArrayList<>());
+        survey.setUser(findUser(request.getCreator_id()));
+
+        return this.entityToResponse(this.repository.save(survey));
     }
 
     @Override
     public SurveyResp update(SurveyReq request, Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        return null;
     }
 
     @Override
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        return ;
     }
 
     private SurveyResp entityToResponse(Survey entity) {
