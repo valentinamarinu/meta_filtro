@@ -1,7 +1,9 @@
 package com.example.filtro_meta.infrastructure.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.example.filtro_meta.domain.entities.User;
 import com.example.filtro_meta.domain.repositories.SurveyRepository;
 import com.example.filtro_meta.domain.repositories.UserRepository;
 import com.example.filtro_meta.infrastructure.abstract_services.ISurveyService;
+import com.example.filtro_meta.infrastructure.helpers.EmailHelper;
 import com.example.filtro_meta.utils.exceptions.BadRequestException;
 import com.example.filtro_meta.utils.messages.ErrorMessages;
 
@@ -33,6 +36,9 @@ public class SurveyService implements ISurveyService {
 
     @Autowired
     private final UserRepository UserRepository;
+
+    @Autowired
+    private final EmailHelper email;
     
     @Override
     public Page<SurveyResp> getAll(int page, int size) {
@@ -57,7 +63,13 @@ public class SurveyService implements ISurveyService {
         survey.setQuestions(new ArrayList<>());
         survey.setUser(findUser(request.getCreator_id()));
 
-        return this.entityToResponse(this.repository.save(survey));
+        Survey surveySave = repository.save(survey);
+
+        User user = findUser(request.getCreator_id());
+
+        if (Objects.nonNull(user.getEmail()))
+                email.sendEmail(user.getEmail(), "Survey had been create: "+request.getTitle(),"Thank you for this new survey", LocalDateTime.now());
+        return this.entityToResponse(surveySave);
     }
 
     @Override
