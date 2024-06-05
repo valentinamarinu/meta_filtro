@@ -46,8 +46,7 @@ public class SurveyService implements ISurveyService {
 
     @Override
     public SurveyResp get(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        return this.entityToResponse(this.find(id));
     }
 
     @Override
