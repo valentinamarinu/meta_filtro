@@ -22,6 +22,6 @@ public class SurveyResp {
     private String description;
     private LocalDateTime creation_date;
     private State active;
-    private List<QuestionBasic> questions;
+    private List<QuestionBasicResp> questions;
     private UserBasicResp user;
 }

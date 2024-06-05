@@ -15,7 +15,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionBasic {
+public class QuestionBasicResp {
     private Long id;
     private String text;
     private String type;
