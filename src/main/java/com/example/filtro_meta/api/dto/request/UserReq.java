@@ -4,6 +4,7 @@ import com.example.filtro_meta.utils.enums.State;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,6 @@ public class UserReq {
     )
     private String password;
 
-    @NotBlank(message = "The status of the user is required.")
-    @Pattern(regexp = "ACTIVE|INACTIVE", message = "The state must be ACTIVE or INACTIVE.")
+    @NotNull(message = "The status of the user is required.")
     private State active;
 }
